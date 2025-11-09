@@ -11,6 +11,7 @@ import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilter
 import Register from "../../pages/Register/Register";
 import Error from "../../pages/ErrorPage/Error";
 import Loading from "../Loading/Loading";
+import ProductDetails from "../Product Details/ProductDetails";
 
 const router = createBrowserRouter([
 {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
         {
             path:'/category-filtered-product/:categoryName',
             element:<CategoryFilteredProduct></CategoryFilteredProduct>
+        },
+        {
+            path:"/productDetails/:id",
+            element:<ProductDetails></ProductDetails>
         }
     ]
 },

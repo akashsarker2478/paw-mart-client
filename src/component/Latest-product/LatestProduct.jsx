@@ -1,8 +1,9 @@
 import React from 'react';
 import { FaPaw, FaMapMarkerAlt, FaEye, FaTag } from 'react-icons/fa';
+import { Link } from 'react-router';
 
 const LatestProduct = ({ product }) => {
-    const { image, name, category, price, location } = product;
+    const { image, name, category, price, location,_id } = product;
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 group">
@@ -58,10 +59,10 @@ const LatestProduct = ({ product }) => {
                 </div>
 
                
-                <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform group-hover:scale-105 active:scale-95 shadow-md group-hover:shadow-lg flex items-center justify-center gap-2">
+                <Link to={`/productDetails/${_id}`} className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform group-hover:scale-105 active:scale-95 shadow-md group-hover:shadow-lg flex items-center justify-center gap-2">
                     <FaEye className="text-white" />
                     <span>See Details</span>
-                </button>
+                </Link>
             </div>
         </div>
     );
