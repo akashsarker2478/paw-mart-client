@@ -157,7 +157,7 @@ const Navbar = () => {
             <FaPaw className="text-white text-2xl" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="md:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Paw Mart
             </span>
             <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
@@ -210,7 +210,7 @@ const Navbar = () => {
                       <p className="font-bold text-gray-800 dark:text-white">
                         {user.displayName || "User"}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 text-wrap">
                         {user.email}
                       </p>
                     </div>

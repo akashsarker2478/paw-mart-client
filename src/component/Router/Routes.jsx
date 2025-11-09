@@ -9,11 +9,14 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../../pages/Login/Login"
 import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilteredProduct";
 import Register from "../../pages/Register/Register";
+import Error from "../../pages/ErrorPage/Error";
+import Loading from "../Loading/Loading";
 
 const router = createBrowserRouter([
 {
     path:'/',
     element:<HomeLayout></HomeLayout>,
+    hydrateFallbackElement:<Loading></Loading>,
     children:[
         {
             index:true,
@@ -44,6 +47,7 @@ const router = createBrowserRouter([
 {
     path:'/auth',
     element:<AuthLayout></AuthLayout>,
+    hydrateFallbackElement:<Loading></Loading>,
     children:[
         {
             path:'/auth/login',
@@ -54,6 +58,10 @@ const router = createBrowserRouter([
             element:<Register></Register>
         }
     ]
-}
+},
+ {
+    path:'/*',
+    element:<Error></Error>
+  }
 ])
 export default router;

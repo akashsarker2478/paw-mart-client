@@ -2,6 +2,8 @@ import React from 'react';
 import Home from '../Home/Home';
 import Navbar from '../Navbar/Navbar';
 import { Outlet } from 'react-router';
+import Footer from '../../pages/Footer/Footer';
+
 
 
 const homeLayout = () => {
@@ -15,6 +17,9 @@ const homeLayout = () => {
             <main>
                 <Outlet></Outlet>
             </main>
+            <section className='mt-5'>
+                <Footer></Footer>
+            </section>
         </div>
     );
 };
