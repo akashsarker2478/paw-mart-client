@@ -7,6 +7,7 @@ import MyListing from "../../pages/My-Listing/MyListing";
 import MyOrders from "../../pages/My-orders/MyOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../../pages/Login/Login"
+import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilteredProduct";
 
 const router = createBrowserRouter([
 {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         {
             path:'/my-orders',
             element:<MyOrders></MyOrders>
+        },
+        {
+            path:'/category-filtered-product/:categoryName',
+            element:<CategoryFilteredProduct></CategoryFilteredProduct>
         }
     ]
 },

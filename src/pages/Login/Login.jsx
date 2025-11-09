@@ -1,14 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuth from '../../component/Hooks/useAuth';
 
 const Login = () => {
     const {googleSignIn} = useAuth()
+    const navigate = useNavigate()
     const handleGoogleSignIn=()=>{
         googleSignIn()
         .then(res=>{
             console.log(res.user)
             alert('google sign in successful')
+            navigate('/')
         })
         .catch(error=>{
             console.log(error.message)
