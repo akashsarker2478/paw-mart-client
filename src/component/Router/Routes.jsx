@@ -8,6 +8,7 @@ import MyOrders from "../../pages/My-orders/MyOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../../pages/Login/Login"
 import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilteredProduct";
+import Register from "../../pages/Register/Register";
 
 const router = createBrowserRouter([
 {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
         {
             path:'/auth/login',
             element:<Login></Login>
+        },
+        {
+            path:'/auth/register',
+            element:<Register></Register>
         }
     ]
 }

@@ -1,85 +1,162 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router';
-import useAuth from '../../component/Hooks/useAuth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import {
+  FaEye,
+  FaRegEyeSlash,
+  FaEnvelope,
+  FaLock,
+  FaGoogle,
+} from "react-icons/fa";
+import useAuth from "../../component/Hooks/useAuth";
 
 const Login = () => {
-    const {googleSignIn} = useAuth()
-    const navigate = useNavigate()
-    const handleGoogleSignIn=()=>{
-        googleSignIn()
-        .then(res=>{
-            console.log(res.user)
-            alert('google sign in successful')
-            navigate('/')
-        })
-        .catch(error=>{
-            console.log(error.message)
-        })
-    }
-    return (
-         <div className="card bg-base-100 w-full mx-auto mt-8 max-w-sm shrink-0 shadow-2xl">
-      <div className="card-body">
-        <form>
-          <fieldset className="fieldset">
-            <label className="label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="input"
-              placeholder="Email"
-            />
-            <label className="label">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="input"
-              placeholder="Password"
-            />
-            <div>
-              <a className="link link-hover">Forgot password?</a>
+  const { googleSignIn, loginUser } = useAuth();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    loginUser(email, password)
+      .then((res) => {
+        console.log(res.user);
+        alert("User login successful");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        alert(error.message);
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((res) => {
+        console.log(res.user);
+        alert("Google sign in successful");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-center">
+            <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+            <p className="text-blue-100">Sign in to your Paw Mart account</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="p-6 space-y-4">
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <FaEnvelope className="text-blue-500" />
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300"
+                placeholder="Enter your email"
+                required
+              />
             </div>
-            <button className="btn btn-neutral mt-4">Login</button>
-            <h2 className="text-center text-xl">Or</h2>
-            <button
-              onClick={handleGoogleSignIn}
-              type='button'
-              className="btn bg-white text-black border-[#e5e5e5]"
-            >
-              <svg
-                aria-label="Google logo"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <FaLock className="text-blue-500" />
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white pr-12 transition-all duration-300"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-500 transition-colors duration-300 p-1"
+                >
+                  {showPassword ? (
+                    <FaEye className="text-blue-500 text-lg" />
+                  ) : (
+                    <FaRegEyeSlash className="text-lg" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <a
+                href="#"
+                className="text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
               >
-                <g>
-                  <path d="m0 0H512V512H0" fill="#fff"></path>
-                  <path
-                    fill="#34a853"
-                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                  ></path>
-                  <path
-                    fill="#4285f4"
-                    d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                  ></path>
-                  <path
-                    fill="#fbbc02"
-                    d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                  ></path>
-                  <path
-                    fill="#ea4335"
-                    d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                  ></path>
-                </g>
-              </svg>
-              Login with Google
+                Forgot password?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              Sign In
             </button>
-          </fieldset>
-         <p>don't have an account? please <Link to={'/auth/register'}className="text-blue-500">Register</Link></p>
-        </form>
+
+            <div className="relative flex items-center py-4">
+              <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+              <span className="flex-shrink mx-4 text-gray-500 dark:text-gray-400 text-sm">
+                Or continue with
+              </span>
+              <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+
+            {/* Google Sign In */}
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 group"
+            >
+              <FaGoogle className="text-red-500 text-lg group-hover:scale-110 transition-transform" />
+              Sign in with Google
+            </button>
+          </form>
+
+          <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+            <p className="text-center text-gray-600 dark:text-gray-400">
+              Don't have an account?{" "}
+              <Link
+                to={"/auth/register"}
+                className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors duration-300"
+              >
+                Create account
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            By signing in, you agree to our{" "}
+            <a href="#" className="text-blue-500 hover:underline">
+              Terms
+            </a>{" "}
+            and{" "}
+            <a href="#" className="text-blue-500 hover:underline">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
       </div>
     </div>
-    );
+  );
 };
 
 export default Login;
