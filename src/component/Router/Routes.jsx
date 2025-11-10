@@ -12,6 +12,7 @@ import Register from "../../pages/Register/Register";
 import Error from "../../pages/ErrorPage/Error";
 import Loading from "../Loading/Loading";
 import ProductDetails from "../Product Details/ProductDetails";
+import PrivateRoute from "./PrivateRoute"
 
 const router = createBrowserRouter([
 {
@@ -45,7 +46,9 @@ const router = createBrowserRouter([
         },
         {
             path:"/productDetails/:id",
-            element:<ProductDetails></ProductDetails>
+            element:<PrivateRoute>
+                <ProductDetails></ProductDetails>
+            </PrivateRoute>
         }
     ]
 },
