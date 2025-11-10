@@ -13,6 +13,7 @@ import Error from "../../pages/ErrorPage/Error";
 import Loading from "../Loading/Loading";
 import ProductDetails from "../Product Details/ProductDetails";
 import PrivateRoute from "./PrivateRoute"
+import Update from "../update Product/Update";
 
 const router = createBrowserRouter([
 {
@@ -38,6 +39,12 @@ const router = createBrowserRouter([
             path:'/my-listing',
             element:<PrivateRoute>
                 <MyListing></MyListing>
+            </PrivateRoute>
+        },
+        {
+            path:'/update/:id',
+            element:<PrivateRoute>
+                <Update></Update>
             </PrivateRoute>
         },
         {

@@ -3,6 +3,7 @@ import useAxios from '../../component/Hooks/useAxios';
 import useAuth from '../../component/Hooks/useAuth';
 import Loading from '../../component/Loading/Loading';
 import { FaDownload, FaShoppingBag, FaUser, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
+import jsPDF from 'jspdf';
 
 const MyOrders = () => {
     const { user } = useAuth();
@@ -23,7 +24,33 @@ const MyOrders = () => {
     }, [axiosInstance, user]);
 
     const handleDownloadClick = () => {
-        alert("Download button clicked! PDF feature not implemented yet.");
+           const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("My Orders Report", 10, 10);
+
+    doc.setFontSize(12);
+    let y = 20;
+
+    orders.forEach((order, index) => {
+        doc.text(`Order: ${index + 1}`, 10, y);
+        doc.text(`Product: ${order.productName}`, 10, y + 6);
+        doc.text(`Buyer: ${order.buyerName}`, 10, y + 12);
+        doc.text(`Price: ${order.price}`, 10, y + 18);
+        doc.text(`Address: ${order.address}`, 10, y + 24);
+        doc.text(`Phone: ${order.phone}`, 10, y + 30);
+        doc.text(`Date: ${order.date}`, 10, y + 36);
+
+        y += 50;
+
+        
+        if (y > 270) {
+            doc.addPage();
+            y = 20;
+        }
+    });
+
+    doc.save("my-orders.pdf"); 
     };
 
     if (loading) return <Loading />;
@@ -31,10 +58,10 @@ const MyOrders = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
             <div className="container mx-auto px-4">
-                {/* Header Section */}
+                 
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                        {/* User Info and Title */}
+                        
                         <div className="flex items-center gap-4">
                             <div className="relative">
                                 <img 
