@@ -30,15 +30,21 @@ const router = createBrowserRouter([
         },
         {
             path:'/add-listing',
-            element:<AddListing></AddListing>
+            element:<PrivateRoute>
+                <AddListing></AddListing>
+            </PrivateRoute>
         },
         {
             path:'/my-listing',
-            element:<MyListing></MyListing>
+            element:<PrivateRoute>
+                <MyListing></MyListing>
+            </PrivateRoute>
         },
         {
             path:'/my-orders',
-            element:<MyOrders></MyOrders>
+            element:<PrivateRoute>
+                <MyOrders></MyOrders>
+            </PrivateRoute>
         },
         {
             path:'/category-filtered-product/:categoryName',
