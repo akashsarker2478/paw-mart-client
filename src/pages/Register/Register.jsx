@@ -6,17 +6,17 @@ import {
   FaEnvelope,
   FaCamera,
   FaGoogle,
-  FaCheckCircle,
-  FaTimesCircle
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../component/Hooks/useAuth";
+import useAxios from "../../component/Hooks/useAxios";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [eye, setEye] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordValid, setPasswordValid] = useState(false);
+  const [passwordHint, setPasswordHint] = useState("");
   const { createUser, updateUser, setUser, googleSignIn } = useAuth();
+  const axiosInstance = useAxios()
   const navigate = useNavigate();
 
   const validatePassword = (password) => {
@@ -38,9 +38,26 @@ const Register = () => {
 
   const handlePasswordChange = (e) => {
     const password = e.target.value;
-    const error = validatePassword(password);
-    setPasswordError(error);
-    setPasswordValid(!error && password.length > 0);
+    
+    if (password.length === 0) {
+      setPasswordHint("");
+      return;
+    }
+
+    const minLength = /.{6,}/;
+    const hasUpperCase = /[A-Z]/;
+    const hasLowerCase = /[a-z]/;
+
+    // Real-time hints
+    if (!minLength.test(password)) {
+      setPasswordHint("❌ Need at least 6 characters");
+    } else if (!hasUpperCase.test(password)) {
+      setPasswordHint("❌ Need at least 1 uppercase letter");
+    } else if (!hasLowerCase.test(password)) {
+      setPasswordHint("❌ Need at least 1 lowercase letter");
+    } else {
+      setPasswordHint("✅ Strong password!");
+    }
   };
 
   const handleRegister = (e) => {
@@ -51,10 +68,13 @@ const Register = () => {
     const photo = e.target.photo.value;
     const password = e.target.password.value;
 
-    
     const error = validatePassword(password);
     if (error) {
-      setPasswordError(error);
+      Swal.fire({
+        icon: "error",
+        title: "Weak Password",
+        text: error,
+      });
       return;
     }
 
@@ -68,16 +88,39 @@ const Register = () => {
               displayName: name,
               photoURL: photo,
             });
-            alert("Account created successfully!");
+            Swal.fire({
+            icon: "success",
+            title: "Account Created!",
+            text: "Your account has been created successfully.",
+            timer: 1500,
+            showConfirmButton: false,
+            position: "top",
+          });
+            const newUser={
+          name:res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+        };
+        axiosInstance.post('/user',newUser)
+        .then(data=>{
+          console.log(data.data)
+        })
             navigate("/");
           })
           .catch((err) => {
-            console.log("Update Error:", err.message);
+            Swal.fire({
+            icon: "error",
+            title: "Update Failed!",
+            text: err.message,
+          });
           });
       })
       .catch((err) => {
-        console.log("Create Error:", err.message);
-        alert(err.message);
+        Swal.fire({
+        icon: "error",
+        title: "Registration Failed!",
+        text: err.message,
+      });
       });
   };
 
@@ -85,12 +128,33 @@ const Register = () => {
     googleSignIn()
       .then(res => {
         console.log(res.user);
-        alert('Google sign in successful');
+        const user = res.user;
+          Swal.fire({
+        icon: "success",
+        title: "Google Login Successful!",
+        text: `Welcome, ${user.displayName}!`,
+        timer: 1500,
+        showConfirmButton: false,
+        position: "top",
+      });
+        const newUser={
+          name:res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+        };
+        axiosInstance.post('/user',newUser)
+        .then(data=>{
+          console.log(data.data)
+        })
         navigate('/');
       })
       .catch(error => {
         console.log(error.message);
-        alert(error.message);
+         Swal.fire({
+        icon: "error",
+        title: "Google Login Failed!",
+        text: error.message,
+      });
       });
   };
 
@@ -174,13 +238,7 @@ const Register = () => {
               <div className="relative">
                 <input
                   type={eye ? "text" : "password"}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent dark:bg-gray-700 dark:text-white pr-12 transition-all duration-300 ${
-                    passwordError && !passwordValid
-                      ? "border-red-500 focus:ring-red-500"
-                      : passwordValid
-                      ? "border-green-500 focus:ring-green-500"
-                      : "border-gray-300 dark:border-gray-600 focus:ring-blue-500"
-                  }`}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white pr-12 transition-all duration-300"
                   name="password"
                   placeholder="Create a strong password"
                   onChange={handlePasswordChange}
@@ -189,7 +247,7 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setEye(!eye)}
-                  className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-500 transition-colors duration-300 p-1"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-500 transition-colors duration-300 p-1"
                 >
                   {eye ? (
                     <FaEye className="text-blue-500 text-lg" />
@@ -197,84 +255,41 @@ const Register = () => {
                     <FaRegEyeSlash className="text-lg" />
                   )}
                 </button>
-                
-               
-                {passwordValid && (
-                  <FaCheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 text-lg" />
-                )}
-                {passwordError && !passwordValid && (
-                  <FaTimesCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-500 text-lg" />
-                )}
               </div>
               
-             
-              <div className="space-y-1 mt-2">
-                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                  Password must contain:
-                </p>
-                <ul className="text-xs space-y-1">
-                  <li className={`flex items-center gap-2 ${
-                    passwordValid || !passwordError.includes('6 characters') 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {passwordValid || !passwordError.includes('6 characters') ? (
-                      <FaCheckCircle className="text-green-500" />
-                    ) : (
-                      <FaTimesCircle className="text-red-500" />
-                    )}
-                    At least 6 characters
-                  </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordValid || !passwordError.includes('uppercase') 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {passwordValid || !passwordError.includes('uppercase') ? (
-                      <FaCheckCircle className="text-green-500" />
-                    ) : (
-                      <FaTimesCircle className="text-red-500" />
-                    )}
-                    At least 1 uppercase letter
-                  </li>
-                  <li className={`flex items-center gap-2 ${
-                    passwordValid || !passwordError.includes('lowercase') 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {passwordValid || !passwordError.includes('lowercase') ? (
-                      <FaCheckCircle className="text-green-500" />
-                    ) : (
-                      <FaTimesCircle className="text-red-500" />
-                    )}
-                    At least 1 lowercase letter
-                  </li>
-                </ul>
-              </div>
-              
-              
-              {passwordError && (
-                <p className="text-red-600 dark:text-red-400 text-xs font-medium mt-2 flex items-center gap-2">
-                  <FaTimesCircle />
-                  {passwordError}
+              {/* Real-time Password Hint */}
+              {passwordHint && (
+                <p className={`text-sm font-medium mt-1 ${
+                  passwordHint.includes("✅") 
+                    ? "text-green-600 dark:text-green-400" 
+                    : "text-red-600 dark:text-red-400"
+                }`}>
+                  {passwordHint}
                 </p>
               )}
+
+              {/* Password Requirements Info */}
+              <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-2">
+                  Password Requirements:
+                </p>
+                <ul className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                  <li>• At least 6 characters</li>
+                  <li>• 1 uppercase letter (A-Z)</li>
+                  <li>• 1 lowercase letter (a-z)</li>
+                </ul>
+              </div>
             </div>
 
-           
+            {/* Register Button - Always Enabled */}
             <button
               type="submit"
-              disabled={!passwordValid}
-              className={`w-full font-semibold py-3 rounded-xl transition-all duration-300 transform shadow-lg mt-6 ${
-                passwordValid
-                  ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white hover:scale-105 hover:shadow-xl"
-                  : "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-              }`}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mt-2"
             >
-              {passwordValid ? "Create Account" : "Please meet password requirements"}
+              Create Account
             </button>
 
-           
+            {/* Divider */}
             <div className="relative flex items-center py-4">
               <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
               <span className="flex-shrink mx-4 text-gray-500 dark:text-gray-400 text-sm">
@@ -294,7 +309,7 @@ const Register = () => {
             </button>
           </form>
 
-         
+          {/* Footer */}
           <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-t border-gray-200 dark:border-gray-600">
             <p className="text-center text-gray-600 dark:text-gray-400">
               Already have an account?{" "}
@@ -308,7 +323,7 @@ const Register = () => {
           </div>
         </div>
 
-      
+        {/* Additional Info */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             By creating an account, you agree to our{" "}

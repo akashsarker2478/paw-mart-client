@@ -8,9 +8,11 @@ import {
   FaGoogle,
 } from "react-icons/fa";
 import useAuth from "../../component/Hooks/useAuth";
+import useAxios from "../../component/Hooks/useAxios";
 
 const Login = () => {
   const { googleSignIn, loginUser } = useAuth();
+  const axiosInstance = useAxios()
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,6 +37,15 @@ const Login = () => {
       .then((res) => {
         console.log(res.user);
         alert("Google sign in successful");
+        const newUser={
+          name:res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+        };
+        axiosInstance.post('/user',newUser)
+        .then(data=>{
+          console.log(data.data)
+        })
         navigate("/");
       })
       .catch((error) => {

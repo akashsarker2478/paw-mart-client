@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import useAuth from "../Hooks/useAuth";
 import ProfileIcon from "../../assets/profile icon.png";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -29,16 +30,29 @@ const Navbar = () => {
   }, [theme]);
 
   const handleLogOut = () => {
-    logOut()
-      .then(() => {
-        alert("Logout successful");
+  logOut()
+    .then(() => {
+      Swal.fire({
+        title: "Logged Out!",
+        text: "You have been logged out successfully.",
+        icon: "success",
+        confirmButtonText: "OK"
+      }).then(() => {
         navigate('/auth/login');
         setIsProfileOpen(false);
-      })
-      .catch((error) => {
-        console.log(error.message);
       });
-  };
+    })
+    .catch((error) => {
+      console.log(error.message);
+      Swal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+    });
+};
+
 
   const handleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -210,7 +224,7 @@ const Navbar = () => {
                       <p className="font-bold text-gray-800 dark:text-white">
                         {user.displayName || "User"}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 text-wrap">
+                      <p className="text-sm truncate max-w-[180px] text-gray-500 dark:text-gray-400 text-wrap">
                         {user.email}
                       </p>
                     </div>
@@ -245,16 +259,7 @@ const Navbar = () => {
 
                 {/* Navigation Links in Dropdown */}
                 <div className="p-2 border-b border-gray-200 dark:border-gray-700">
-                  <div className="space-y-1">
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-300"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      <FaUser className="text-blue-500" />
-                      <span>My Profile</span>
-                    </Link>
-                  </div>
+                  
                 </div>
 
                 {/* Logout Button */}
