@@ -91,16 +91,15 @@ const MyListing = () => {
         {/* Listings Section */}
         {listings.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
-            <div className="text-6xl mb-4">📦</div>
             <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">
               No Listings Yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               You haven't created any listings yet. Start by adding your first pet or product to sell!
             </p>
-            <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            <Link to={'/add-listing'} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
               Create First Listing
-            </button>
+            </Link>
           </div>
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">

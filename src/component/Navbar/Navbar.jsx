@@ -13,6 +13,7 @@ import {
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "../Hooks/useAuth";
 import ProfileIcon from "../../assets/profile icon.png";
 import Swal from "sweetalert2";
@@ -30,29 +31,28 @@ const Navbar = () => {
   }, [theme]);
 
   const handleLogOut = () => {
-  logOut()
-    .then(() => {
-      Swal.fire({
-        title: "Logged Out!",
-        text: "You have been logged out successfully.",
-        icon: "success",
-        confirmButtonText: "OK"
-      }).then(() => {
-        navigate('/auth/login');
-        setIsProfileOpen(false);
+    logOut()
+      .then(() => {
+        Swal.fire({
+          title: "Logged Out!",
+          text: "You have been logged out successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate("/auth/login");
+          setIsProfileOpen(false);
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      Swal.fire({
-        title: "Error!",
-        text: error.message,
-        icon: "error",
-        confirmButtonText: "OK"
-      });
-    });
-};
-
+  };
 
   const handleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -137,8 +137,13 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 px-4 lg:px-8">
-      
+    <motion.div
+      className="navbar bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 px-4 lg:px-8"
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Navbar Start */}
       <div className="navbar-start">
         <div className="dropdown lg:hidden">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -165,11 +170,15 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Logo */}
+        {/* Animated Logo */}
         <Link to="/" className="flex items-center gap-3 ml-2 lg:ml-0">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
+          <motion.div
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl"
+          >
             <FaPaw className="text-white text-2xl" />
-          </div>
+          </motion.div>
           <div className="flex flex-col">
             <span className="md:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Paw Mart
@@ -181,110 +190,112 @@ const Navbar = () => {
         </Link>
       </div>
 
-      
+      {/* Navbar Center */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal gap-2 px-1">{links}</ul>
       </div>
 
-      
+      {/* Navbar End */}
       <div className="navbar-end">
         {user ? (
           <div className="relative">
-           
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               className="relative group"
             >
-              <img
+              <motion.img
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.3 }}
                 src={user?.photoURL || ProfileIcon}
                 alt={user.displayName || "User"}
                 className="w-10 h-10 rounded-full border-2 border-blue-500 object-cover hover:border-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl"
               />
-              
+
               <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
 
-             
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                 {user.displayName || "User"}
               </div>
             </button>
 
-            
-            {isProfileOpen && (
-              <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-                
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={user.photoURL || ProfileIcon}
-                      alt={user.displayName || "User"}
-                      className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
-                    />
-                    <div>
-                      <p className="font-bold text-gray-800 dark:text-white">
-                        {user.displayName || "User"}
-                      </p>
-                      <p className="text-sm truncate max-w-[180px] text-gray-500 dark:text-gray-400 text-wrap">
-                        {user.email}
-                      </p>
+            {/* Animated Dropdown */}
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute right-0 mt-3 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden"
+                >
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.photoURL || ProfileIcon}
+                        alt={user.displayName || "User"}
+                        className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
+                      />
+                      <div>
+                        <p className="font-bold text-gray-800 dark:text-white">
+                          {user.displayName || "User"}
+                        </p>
+                        <p className="text-sm truncate max-w-[180px] text-gray-500 dark:text-gray-400">
+                          {user.email}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-               
-                <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
-                      {theme === "light" ? (
-                        <FaSun className="text-yellow-500" />
-                      ) : (
-                        <FaMoon className="text-blue-500" />
-                      )}
-                      Theme
-                    </span>
-                    <button
-                      onClick={handleTheme}
-                      className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ${
-                        theme === "dark" ? "bg-blue-500" : "bg-gray-300"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ${
-                          theme === "dark" ? "translate-x-6" : "translate-x-1"
+                  <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                        {theme === "light" ? (
+                          <FaSun className="text-yellow-500" />
+                        ) : (
+                          <FaMoon className="text-blue-500" />
+                        )}
+                        Theme
+                      </span>
+                      <button
+                        onClick={handleTheme}
+                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ${
+                          theme === "dark" ? "bg-blue-500" : "bg-gray-300"
                         }`}
-                      />
+                      >
+                        <span
+                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ${
+                            theme === "dark" ? "translate-x-6" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-2">
+                    <button
+                      onClick={handleLogOut}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300 font-semibold"
+                    >
+                      <FaSignOutAlt />
+                      Logout
                     </button>
                   </div>
-                </div>
-
-                {/* Navigation Links in Dropdown */}
-                <div className="p-2 border-b border-gray-200 dark:border-gray-700">
-                  
-                </div>
-
-                {/* Logout Button */}
-                <div className="p-2">
-                  <button
-                    onClick={handleLogOut}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300 font-semibold"
-                  >
-                    <FaSignOutAlt />
-                    Logout
-                  </button>
-                </div>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
-          <Link
-            to={"/auth/login"}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-          >
-            Login
-          </Link>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link
+              to={"/auth/login"}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Login
+            </Link>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

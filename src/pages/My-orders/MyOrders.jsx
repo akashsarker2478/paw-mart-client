@@ -4,6 +4,8 @@ import useAuth from '../../component/Hooks/useAuth';
 import Loading from '../../component/Loading/Loading';
 import { FaDownload, FaShoppingBag, FaUser, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
 import jsPDF from 'jspdf';
+import { Link } from 'react-router';
+import Swal from 'sweetalert2';
 
 const MyOrders = () => {
     const { user } = useAuth();
@@ -24,33 +26,46 @@ const MyOrders = () => {
     }, [axiosInstance, user]);
 
     const handleDownloadClick = () => {
-           const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text("My Orders Report", 10, 10);
-
-    doc.setFontSize(12);
-    let y = 20;
-
-    orders.forEach((order, index) => {
-        doc.text(`Order: ${index + 1}`, 10, y);
-        doc.text(`Product: ${order.productName}`, 10, y + 6);
-        doc.text(`Buyer: ${order.buyerName}`, 10, y + 12);
-        doc.text(`Price: ${order.price}`, 10, y + 18);
-        doc.text(`Address: ${order.address}`, 10, y + 24);
-        doc.text(`Phone: ${order.phone}`, 10, y + 30);
-        doc.text(`Date: ${order.date}`, 10, y + 36);
-
-        y += 50;
-
-        
-        if (y > 270) {
-            doc.addPage();
-            y = 20;
+        // Check if no orders
+        if (orders.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Orders Found',
+                text: 'You need to have at least one order to download the report.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+            return;
         }
-    });
 
-    doc.save("my-orders.pdf"); 
+        // Generate PDF if orders exist
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("My Orders Report", 10, 10);
+
+        doc.setFontSize(12);
+        let y = 20;
+
+        orders.forEach((order, index) => {
+            doc.text(`Order: ${index + 1}`, 10, y);
+            doc.text(`Product: ${order.productName}`, 10, y + 6);
+            doc.text(`Buyer: ${order.buyerName}`, 10, y + 12);
+            doc.text(`Price: ${order.price}`, 10, y + 18);
+            doc.text(`Address: ${order.address}`, 10, y + 24);
+            doc.text(`Phone: ${order.phone}`, 10, y + 30);
+            doc.text(`Date: ${order.date}`, 10, y + 36);
+
+            y += 50;
+
+            // Add new page if needed
+            if (y > 270) {
+                doc.addPage();
+                y = 20;
+            }
+        });
+
+        doc.save("my-orders.pdf"); 
     };
 
     if (loading) return <Loading />;
@@ -96,16 +111,15 @@ const MyOrders = () => {
                 {/* Orders Section */}
                 {orders.length === 0 ? (
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
-                        <div className="text-6xl mb-4">📦</div>
                         <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">
                             No Orders Yet
                         </h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                             You haven't placed any orders yet. Start exploring our pets and supplies to make your first order!
                         </p>
-                        <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        <Link to={"/pets-supply"} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
                             Browse Products
-                        </button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">

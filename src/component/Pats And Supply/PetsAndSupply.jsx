@@ -67,9 +67,9 @@ const PetsAndSupply = () => {
               </p>
             </div>
             
-            {/* Category Filter - Mobile First */}
+           
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              {/* Category Filter */}
+             
               <div className="relative flex-1">
                 <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
                 <select
