@@ -111,7 +111,7 @@ const AllPatsAndProduct = ({product, index}) => {
             </motion.div>
 
             <div className="p-6">
-                {/* Product Name with Tooltip for full text */}
+               
                 <motion.h3 
                     className="text-xl font-bold text-gray-800 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-help"
                     data-tooltip-id="name-tooltip"
@@ -160,7 +160,7 @@ const AllPatsAndProduct = ({product, index}) => {
                     )}
                 </div>
 
-                {/* Button with Tooltip */}
+                
                 <motion.div
                     variants={buttonVariants}
                     whileHover="hover"
@@ -183,7 +183,7 @@ const AllPatsAndProduct = ({product, index}) => {
                 </motion.div>
             </div>
 
-            {/* React Tooltip Components */}
+           
             <Tooltip
                 id="image-tooltip"
                 place="top"

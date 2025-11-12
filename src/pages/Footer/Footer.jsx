@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import TwitterIcon from '../../assets/twitter (2).png'
+import TwitterIcon from "../../assets/twitter (2).png";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -8,15 +8,16 @@ import {
   FaPaw,
   FaHeart,
   FaPhoneAlt,
-  FaMapMarkerAlt
+  FaMapMarkerAlt,
 } from "react-icons/fa";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const Footer = () => {
   return (
     <footer className="bg-[#0f0f11] text-gray-300 pt-14 pb-8">
       <div className="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-
-        
+        {/* Logo + About */}
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-blue-600 p-2 rounded-lg">
@@ -24,14 +25,13 @@ const Footer = () => {
             </div>
             <h2 className="text-2xl font-extrabold text-white">PawMart</h2>
           </div>
-
           <p className="text-gray-400 leading-relaxed">
             Your trusted companion for pet adoption and premium pet care
             essentials. We help you find your perfect furry friend with love.
           </p>
         </div>
 
-       
+        {/* Quick Links */}
         <div>
           <h3 className="text-xl font-semibold text-white mb-4">Quick Links</h3>
           <ul className="space-y-3">
@@ -70,7 +70,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        
+        {/* Support */}
         <div>
           <h3 className="text-xl font-semibold text-white mb-4">Support</h3>
           <ul className="space-y-3">
@@ -109,7 +109,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        
+        {/* Contact + Socials */}
         <div>
           <h3 className="text-xl font-semibold text-white mb-4">Contact Us</h3>
           <ul className="space-y-4">
@@ -117,50 +117,56 @@ const Footer = () => {
               <FaEnvelope className="text-blue-500" />
               info@pawmart.com
             </li>
-
             <li className="flex items-center gap-3">
               <FaPhoneAlt className="text-blue-500" />
               +880 1234 567 890
             </li>
-
             <li className="flex items-center gap-3">
               <FaMapMarkerAlt className="text-blue-500" />
               Dhaka, Bangladesh
             </li>
           </ul>
 
-        
+          {/* Social Icons */}
           <div className="flex gap-4 mt-6">
             <a
               href="https://facebook.com"
               target="_blank"
+              data-tooltip-id="fb-tip"
+              data-tooltip-content="Follow us on Facebook"
               className="p-3 bg-white/10 rounded-xl hover:bg-blue-600 transition-all hover:scale-110"
             >
               <FaFacebookF className="text-white text-lg" />
             </a>
-            
-           
+
             <a
               href="https://twitter.com"
               target="_blank"
+              data-tooltip-id="twitter-tip"
+              data-tooltip-content="Follow us on Twitter"
               className="p-3 bg-white/10 rounded-xl hover:bg-black transition-all hover:scale-110"
             >
-              <img 
-                src={TwitterIcon} 
-                alt="Twitter" 
+              <img
+                src={TwitterIcon}
+                alt="Twitter"
                 className="w-5 h-5 filter brightness-0 invert"
               />
             </a>
-            
+
             <a
               href="https://linkedin.com"
               target="_blank"
+              data-tooltip-id="linkedin-tip"
+              data-tooltip-content="Connect on LinkedIn"
               className="p-3 bg-white/10 rounded-xl hover:bg-blue-700 transition-all hover:scale-110"
             >
               <FaLinkedinIn className="text-white text-lg" />
             </a>
+
             <a
               href="mailto:info@pawmart.com"
+              data-tooltip-id="mail-tip"
+              data-tooltip-content="Email Us"
               className="p-3 bg-white/10 rounded-xl hover:bg-red-600 transition-all hover:scale-110"
             >
               <FaEnvelope className="text-white text-lg" />
@@ -169,7 +175,13 @@ const Footer = () => {
         </div>
       </div>
 
-     
+      {/* Tooltip Components */}
+      <Tooltip id="fb-tip" place="top" style={{ backgroundColor: "#1877F2" }} />
+      <Tooltip id="twitter-tip" place="top" style={{ backgroundColor: "#1DA1F2" }} />
+      <Tooltip id="linkedin-tip" place="top" style={{ backgroundColor: "#0077B5" }} />
+      <Tooltip id="mail-tip" place="top" style={{ backgroundColor: "#EA4335" }} />
+
+      {/* Copyright */}
       <div className="border-t border-white/10 mt-10 pt-5 text-center">
         <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
           Made with <FaHeart className="text-red-500" /> © {new Date().getFullYear()} PawMart — All Rights Reserved
