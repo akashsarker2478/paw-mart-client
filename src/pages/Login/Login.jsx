@@ -7,12 +7,13 @@ import {
   FaLock,
   FaGoogle,
 } from "react-icons/fa";
+import Swal from "sweetalert2";
 import useAuth from "../../component/Hooks/useAuth";
 import useAxios from "../../component/Hooks/useAxios";
 
 const Login = () => {
   const { googleSignIn, loginUser } = useAuth();
-  const axiosInstance = useAxios()
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,15 +21,26 @@ const Login = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+
     loginUser(email, password)
       .then((res) => {
         console.log(res.user);
-        alert("User login successful");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          text: "Welcome back to Paw Mart 🐾",
+          showConfirmButton: false,
+          timer: 1800,
+        });
         navigate("/");
       })
       .catch((error) => {
         console.log(error.message);
-        alert(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message,
+        });
       });
   };
 
@@ -36,20 +48,30 @@ const Login = () => {
     googleSignIn()
       .then((res) => {
         console.log(res.user);
-        alert("Google sign in successful");
-        const newUser={
-          name:res.user.displayName,
+        Swal.fire({
+          icon: "success",
+          title: "Google Sign-In Successful!",
+          text: `Welcome, ${res.user.displayName}!`,
+          showConfirmButton: false,
+          timer: 1800,
+        });
+        const newUser = {
+          name: res.user.displayName,
           email: res.user.email,
           photo: res.user.photoURL,
         };
-        axiosInstance.post('/user',newUser)
-        .then(data=>{
-          console.log(data.data)
-        })
+        axiosInstance.post("/user", newUser).then((data) => {
+          console.log(data.data);
+        });
         navigate("/");
       })
       .catch((error) => {
         console.log(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Google Sign-In Failed",
+          text: error.message,
+        });
       });
   };
 
