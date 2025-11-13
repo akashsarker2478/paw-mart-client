@@ -72,6 +72,7 @@ const MyOrders = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+            <title>My order</title>
             <div className="container mx-auto px-4">
                  
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
