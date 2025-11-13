@@ -102,7 +102,7 @@ const PetsAndSupply = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
+        
         {filteredProducts.length === 0 ? (
           <div className="text-center py-16">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 max-w-md mx-auto shadow-lg border border-gray-200 dark:border-gray-700">

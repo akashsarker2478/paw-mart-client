@@ -26,7 +26,7 @@ const MyOrders = () => {
     }, [axiosInstance, user]);
 
     const handleDownloadClick = () => {
-        // Check if no orders
+       
         if (orders.length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -38,7 +38,7 @@ const MyOrders = () => {
             return;
         }
 
-        // Generate PDF if orders exist
+        // Generate PDF 
         const doc = new jsPDF();
 
         doc.setFontSize(18);
@@ -58,7 +58,7 @@ const MyOrders = () => {
 
             y += 50;
 
-            // Add new page if needed
+            
             if (y > 270) {
                 doc.addPage();
                 y = 20;
@@ -217,7 +217,7 @@ const MyOrders = () => {
                             </table>
                         </div>
 
-                        {/* Table Footer */}
+                        
                         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Showing {orders.length} order{orders.length !== 1 ? 's' : ''}
