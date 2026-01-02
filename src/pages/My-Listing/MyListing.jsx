@@ -82,7 +82,7 @@ const MyListing = () => {
             </div>
 
             {/* Add New Listing Button */}
-            <Link to={'/add-listing'} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Link to={'/dashboard/add-listing'} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
               <FaPaw />
               Add New Listing
             </Link>
@@ -98,7 +98,7 @@ const MyListing = () => {
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               You haven't created any listings yet. Start by adding your first pet or product to sell!
             </p>
-            <Link to={'/add-listing'} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            <Link to={'/dashboard/add-listing'} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
               Create First Listing
             </Link>
           </div>
