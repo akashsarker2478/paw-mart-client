@@ -16,7 +16,7 @@ const MyListing = () => {
     if (!user?.email) return;
 
     axiosInstance
-      .get(`/product?email=${user.email}`)
+      .get(`/my-products?email=${user.email}`)
       .then((data) => {
         setListings(data.data);
         setLoading(false);

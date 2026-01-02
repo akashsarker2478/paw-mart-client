@@ -17,6 +17,10 @@ import Update from "../update Product/Update";
 import UserDashboardLayout from "../Layouts/User Dashbord Layouts/UserDashboardLayout";
 import DashboardHome from "../UserDashboard/DashboardHome";
 import UserProfile from "../UserDashboard/UserProfile";
+import About from "../../pages/About/About";
+import AdaptionGuide from "../../pages/Adaption guide/AdaptionGuide";
+import Contact from "../../pages/Contact/Contact";
+import BlogsAndTips from "../../pages/Blogs and Tips/BlogsAndTips";
 
 const router = createBrowserRouter([
 {
@@ -32,6 +36,23 @@ const router = createBrowserRouter([
             path:"/pets-supply",
             element:<PetsAndSupply></PetsAndSupply>
         },
+        {
+            path:"/about",
+            element:<About></About>
+        },
+        {
+            path:"/adoption-guide",
+            element:<AdaptionGuide></AdaptionGuide>
+        },
+        {
+            path:"/contact",
+            element:<Contact></Contact>,
+        },
+        {
+            path:'/blog',
+            element:<BlogsAndTips></BlogsAndTips>
+        },
+
         {
             path:'/category-filtered-product/:categoryName',
             element:<CategoryFilteredProduct></CategoryFilteredProduct>

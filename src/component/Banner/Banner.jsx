@@ -2,7 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination, EffectFade } from "swiper/modules";
 import { motion } from "framer-motion";
-import { Link } from "react-router"; // ✅ তোমার নির্দেশমতো react-router থেকে import
+import { Link } from "react-router"; 
 
 // Swiper CSS
 import "swiper/css";

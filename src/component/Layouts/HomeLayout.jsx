@@ -9,7 +9,7 @@ import Footer from '../../pages/Footer/Footer';
 const homeLayout = () => {
     return (
         <div>
-            <header>
+            <header className='mb-20'>
                 <section>
                     <Navbar></Navbar>
                 </section>

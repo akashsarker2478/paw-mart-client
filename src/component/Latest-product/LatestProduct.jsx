@@ -68,4 +68,4 @@ const LatestProduct = ({ product }) => {
     );
 };
 
-export default LatestProduct;
+export default LatestProduct; 

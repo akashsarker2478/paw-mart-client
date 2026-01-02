@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { updateProfile } from "firebase/auth";
 import { auth } from "../../Firebase/firebase.config"; 
 import Swal from "sweetalert2";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaUserCircle } from "react-icons/fa";
 import Loading from "../Loading/Loading";
 import useAuth from "../Hooks/useAuth"; 
 
@@ -50,9 +50,11 @@ const UserProfile = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 mt-10">
-      <h1 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white">
-        My Profile 🐾
-      </h1>
+     <h1 className="text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white flex items-center justify-center gap-4">
+  <FaUserCircle className="text-5xl text-blue-600 dark:text-blue-400" />
+  My Profile
+</h1>
+
 
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
         {/* Header with Gradient */}

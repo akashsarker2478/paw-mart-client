@@ -5,7 +5,7 @@ import { FaHome, FaPlus, FaList, FaShoppingBag, FaUser } from "react-icons/fa";
 
 const UserDashboardLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 my-20">
       <Navbar />
 
       <div className="flex">
