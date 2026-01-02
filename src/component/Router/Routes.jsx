@@ -14,6 +14,9 @@ import Loading from "../Loading/Loading";
 import ProductDetails from "../Product Details/ProductDetails";
 import PrivateRoute from "./PrivateRoute"
 import Update from "../update Product/Update";
+import UserDashboardLayout from "../Layouts/User Dashbord Layouts/UserDashboardLayout";
+import DashboardHome from "../UserDashboard/DashboardHome";
+import UserProfile from "../UserDashboard/UserProfile";
 
 const router = createBrowserRouter([
 {
@@ -30,38 +33,13 @@ const router = createBrowserRouter([
             element:<PetsAndSupply></PetsAndSupply>
         },
         {
-            path:'/add-listing',
-            element:<PrivateRoute>
-                <AddListing></AddListing>
-            </PrivateRoute>
-        },
-        {
-            path:'/my-listing',
-            element:<PrivateRoute>
-                <MyListing></MyListing>
-            </PrivateRoute>
-        },
-        {
-            path:'/update/:id',
-            element:<PrivateRoute>
-                <Update></Update>
-            </PrivateRoute>
-        },
-        {
-            path:'/my-orders',
-            element:<PrivateRoute>
-                <MyOrders></MyOrders>
-            </PrivateRoute>
-        },
-        {
             path:'/category-filtered-product/:categoryName',
             element:<CategoryFilteredProduct></CategoryFilteredProduct>
         },
         {
             path:"/productDetails/:id",
-            element:<PrivateRoute>
+            element:
                 <ProductDetails></ProductDetails>
-            </PrivateRoute>
         }
     ]
 },
@@ -78,6 +56,23 @@ const router = createBrowserRouter([
             path:'/auth/register',
             element:<Register></Register>
         }
+    ]
+},
+{
+    path:'Dashboard',
+    element:<PrivateRoute>
+        <UserDashboardLayout></UserDashboardLayout>
+    </PrivateRoute>,
+    children:[
+        {
+            index:true,
+            element:<DashboardHome></DashboardHome>
+        },
+    { path: "add-listing", element: <AddListing /> },
+      { path: "my-listings", element: <MyListing /> },
+      { path: "my-orders", element: <MyOrders /> },
+      { path: "profile", element: <UserProfile /> },
+      { path: "update/:id", element: <Update /> },
     ]
 },
  {
