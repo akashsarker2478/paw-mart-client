@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import useAxios from "../Hooks/useAxios";
 import Loading from "../Loading/Loading";
-import { FaPaw, FaMapMarkerAlt, FaTag, FaEnvelope, FaDollarSign, FaCalendar, FaPhone, FaHome } from "react-icons/fa";
+import AllPatsAndProduct from "../Pats And Supply/AllPatsAndProduct"; 
+import { FaPaw, FaMapMarkerAlt, FaTag, FaEnvelope, FaDollarSign, FaCalendarAlt, FaHeart, FaPaperPlane } from "react-icons/fa";
 import useAuth from "../Hooks/useAuth";
 import Swal from "sweetalert2";
 
@@ -10,385 +11,246 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const axiosInstance = useAxios();
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [orderData, setOrderData] = useState({
-    buyerName: user?.displayName || "",
-    email: user?.email || "",
-    productId: id,
-    productName: "",
-    quantity: 1,
-    price: 0,
-    address: "",
-    date: "",
-    phone: "",
-    notes: ""
-  });
 
   useEffect(() => {
-    if (user) {
-      setOrderData(prev => ({
-        ...prev,
-        buyerName: user.displayName || "",
-        email: user.email || ""
-      }));
-    }
-  }, [user]);
+    setLoading(true);
+    axiosInstance.get(`/product/${id}`).then((res) => {
+      const currentProduct = res.data;
+      setProduct(currentProduct);
 
-  useEffect(() => {
-    axiosInstance
-      .get(`/product/${id}`)
-      .then((res) => {
-        setProduct(res.data);
-        setOrderData(prev => ({
-          ...prev,
-          productName: res.data.name,
-          price: res.data.price,
-          quantity: res.data.category === "Pets" ? 1 : prev.quantity
-        }));
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      // Similar products from same category (excluding current)
+      axiosInstance
+        .get(`/product?limit=6&category=${currentProduct.category}`)
+        .then((simRes) => {
+          const filtered = simRes.data.products.filter((p) => p._id !== id);
+          setSimilarProducts(filtered);
+          setLoading(false);
+        });
+    }).catch(() => setLoading(false));
   }, [id, axiosInstance]);
 
   const handleOrderSubmit = (e) => {
     e.preventDefault();
-    const orderData ={
-      buyerName:e.target.name.value,
-      email:e.target.email.value,
-      productId:e.target.productId.value,
-      productName:e.target.productName.value,
-      price:e.target.price.value,
-      address:e.target.address.value,
-      phone:e.target.phone.value,
-      date:e.target.date.value,
-      additionalNotes : e.target.notes.value
-    }
-    axiosInstance.post('/orders',orderData)
-    .then(data=>{
-      if(data.data.insertedId){
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Your bid has been placed successfully",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-      }
-    })
-    console.log("Order Data:", orderData);
-    setShowModal(false);
-  };
+    const form = e.target;
+    const orderData = {
+      buyerName: form.name.value,
+      email: form.email.value,
+      productId: id,
+      productName: product.name,
+      price: product.price,
+      address: form.address.value,
+      phone: form.phone.value,
+      date: form.date.value,
+      additionalNotes: form.notes.value,
+      category: product.category,
+    };
 
-  const handleInputChange = (e) => {
-    setOrderData({
-      ...orderData,
-      [e.target.name]: e.target.value
+    axiosInstance.post("/orders", orderData).then((res) => {
+      if (res.data.insertedId) {
+        Swal.fire({
+          icon: "success",
+          title: product.category === "Pets" ? "Adoption Request Sent!" : "Order Placed Successfully!",
+          text: "We'll contact you soon 🐾",
+          timer: 2000,
+        });
+        setShowModal(false);
+        form.reset();
+      }
     });
   };
 
   if (loading) return <Loading />;
+  if (!product) return <div className="text-center py-20 text-2xl">Product not found</div>;
+
+  const isPet = product.category === "Pets";
+  const isFree = product.price === 0 || product.price === "0";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 md:py-8">
-      <div className="container mx-auto px-3 md:px-4">
-        <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-4 md:p-8">
-            
-            {/* Image Section */}
-            <div className="space-y-4">
-              <div className="rounded-xl md:rounded-2xl overflow-hidden shadow-md md:shadow-lg">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-64 md:h-96 object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              
-              {/* Quick Info Cards */}
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 md:p-4 rounded-lg md:rounded-xl border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                    <FaTag className="text-xs md:text-sm" />
-                    <span className="font-semibold text-sm md:text-base">Category</span>
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300 mt-1 text-sm md:text-base">{product.category}</p>
-                </div>
-                
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 md:p-4 rounded-lg md:rounded-xl border border-green-200 dark:border-green-800">
-                  <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                    <FaMapMarkerAlt className="text-xs md:text-sm" />
-                    <span className="font-semibold text-sm md:text-base">Location</span>
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300 mt-1 text-sm md:text-base">{product.location}</p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Main Product Details */}
+          <div className="grid lg:grid-cols-2 gap-10 mb-16">
+            {/* Image */}
+            <div className="rounded-3xl overflow-hidden shadow-2xl">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-96 md:h-full object-cover hover:scale-105 transition-transform duration-700"
+              />
             </div>
 
-            {/* Details Section */}
-            <div className="space-y-4 md:space-y-6">
+            {/* Info */}
+            <div className="space-y-6">
               <div>
-                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-4">
                   {product.name}
                 </h1>
-                <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-3 md:mb-4"></div>
-              </div>
-
-              {/* Price Section */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-blue-100 text-sm">Price</p>
-                    <h3 className="text-2xl md:text-3xl font-bold">{product.price} tk</h3>
-                    {product.category === "Pets" && (
-                      <p className="text-green-200 text-xs md:text-sm mt-1">Adoption Fee</p>
-                    )}
-                  </div>
-                  <FaDollarSign className="text-2xl md:text-4xl opacity-80" />
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 px-5 py-2 rounded-full text-blue-700 dark:text-blue-300 font-semibold flex items-center gap-2">
+                    <FaTag />
+                    {product.category}
+                  </span>
+                  <span className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                    <FaMapMarkerAlt className="text-red-500" />
+                    {product.location}
+                  </span>
                 </div>
               </div>
 
-              {/* Details List */}
-              <div className="space-y-3 md:space-y-4">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg md:rounded-xl">
-                  <FaTag className="text-blue-500 text-sm md:text-base" />
-                  <div>
-                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">Category</p>
-                    <p className="font-semibold text-gray-800 dark:text-white text-sm md:text-base">{product.category}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg md:rounded-xl">
-                  <FaEnvelope className="text-green-500 text-sm md:text-base" />
-                  <div>
-                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">Owner's Email</p>
-                    <p className="font-semibold text-gray-800 dark:text-white text-sm md:text-base">{product.email}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg md:rounded-xl">
-                  <FaMapMarkerAlt className="text-red-500 text-sm md:text-base" />
-                  <div>
-                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">Location</p>
-                    <p className="font-semibold text-gray-800 dark:text-white text-sm md:text-base">{product.location}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 md:p-6 rounded-xl md:rounded-2xl">
-                <h4 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center gap-2 text-sm md:text-base">
-                  <FaPaw className="text-purple-500" />
-                  Description
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm md:text-base">
-                  {product.description}
+              {/* Price Card */}
+              <div className={`p-8 rounded-3xl shadow-2xl text-center ${isFree ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white"}`}>
+                <p className="text-xl opacity-90 mb-2">Adoption Fee</p>
+                <h2 className="text-5xl font-bold mb-3">
+                  {isFree ? (
+                    <>
+                      Free <FaHeart className="inline text-red-300 ml-2 animate-pulse" />
+                    </>
+                  ) : (
+                    `৳${product.price}`
+                  )}
+                </h2>
+                <p className="text-lg opacity-90">
+                  {isPet ? "Ready for a loving home" : "Best quality guaranteed"}
                 </p>
               </div>
 
-              {/* Order Button */}
-              <button 
+              {/* Owner Info */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <h3 className="font-bold text-xl mb-4 flex items-center gap-3">
+                  <FaEnvelope className="text-blue-500" />
+                  Contact Owner
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
+                  Email: <span className="font-semibold">{product.email}</span>
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Owner will contact you after you place request
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <h3 className="font-bold text-xl mb-4 flex items-center gap-3">
+                  <FaPaw className="text-purple-500" />
+                  Description
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {product.description || "No description available."}
+                </p>
+              </div>
+
+              {/* CTA Button */}
+              <button
                 onClick={() => setShowModal(true)}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 md:py-4 px-6 rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm md:text-base"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-4 text-xl"
               >
-                <FaPaw />
-                {product.category === "Pets" ? "Adopt Now" : "Order Now"}
+                <FaPaperPlane />
+                {isPet ? "Request to Adopt" : "Place Order Now"}
               </button>
             </div>
           </div>
+
+          {/* Similar Products */}
+          {similarProducts.length > 0 && (
+            <div className="mt-20">
+              <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-12">
+                More from <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{product.category}</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {similarProducts.map((simProduct) => (
+                  <AllPatsAndProduct key={simProduct._id} product={simProduct} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Daisy UI Modal - Fixed for Dark Mode */}
+      {/* Modal */}
       {showModal && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-2xl w-11/12 md:w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-            <h3 className="font-bold text-xl md:text-2xl mb-4 md:mb-6 flex items-center gap-2">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8">
+            <h3 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-3">
               <FaPaw className="text-blue-500" />
-              {product.category === "Pets" ? "Adoption Form" : "Order Form"}
+              {isPet ? "Adoption Request Form" : "Order Form"}
             </h3>
-            
-            <form onSubmit={handleOrderSubmit} className="space-y-4">
-              {/* Auto-filled Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100">Buyer Name</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    value={orderData.buyerName}
-                    name = 'name'
-                    readOnly 
-                    className="input input-bordered bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-                    placeholder={user ? "Auto-filled from your profile" : "Please login first"}
-                  />
-                </div>
-                
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100">Email</span>
-                  </label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={orderData.email}
-                    readOnly 
-                    className="input input-bordered bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-                    placeholder={user ? "Auto-filled from your profile" : "Please login first"}
-                  />
-                </div>
+
+            <form onSubmit={handleOrderSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={user?.displayName || ""}
+                  readOnly
+                  className="w-full px-5 py-4 rounded-xl bg-gray-100 dark:bg-gray-700"
+                  placeholder="Your Name"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  defaultValue={user?.email || ""}
+                  readOnly
+                  className="w-full px-5 py-4 rounded-xl bg-gray-100 dark:bg-gray-700"
+                  placeholder="Your Email"
+                />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100">Product ID</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    name="productId"
-                    value={orderData.productId}
-                    readOnly 
-                    className="input input-bordered bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  />
-                </div>
-                
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100">Product Name</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    name='productName'
-                    value={orderData.productName}
-                    readOnly 
-                    className="input input-bordered bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  />
-                </div>
-              </div>
+              <input
+                type="text"
+                value={product.name}
+                readOnly
+                className="w-full px-5 py-4 rounded-xl bg-gray-100 dark:bg-gray-700"
+              />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <FaTag />
-                      Quantity
-                    </span>
-                  </label>
-                  <input 
-                    type="number" 
-                    name="quantity"
-                    value={orderData.quantity}
-                    onChange={handleInputChange}
-                    min="1"
-                    disabled={product.category === "Pets"}
-                    className="input input-bordered text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700"
-                  />
-                  {product.category === "Pets" && (
-                    <label className="label">
-                      <span className="label-text-alt text-gray-500 dark:text-gray-400">Quantity is fixed to 1 for pet adoptions</span>
-                    </label>
-                  )}
-                </div>
-                
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      Price
-                    </span>
-                  </label>
-                  <input 
-                    type="text" 
-                    name="price"
-                    value={`${orderData.price} tk`}
-                    readOnly 
-                    className="input input-bordered bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  />
-                </div>
-              </div>
+              <textarea
+                name="address"
+                placeholder="Full Address (required)"
+                required
+                className="w-full px-5 py-4 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-700"
+                rows="3"
+              />
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <FaHome />
-                    Address
-                  </span>
-                </label>
-                <textarea 
-                  name="address"
-                  value={orderData.address}
-                  onChange={handleInputChange}
-                  className="textarea textarea-bordered h-20 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400"
-                  placeholder="Enter your full address"
+              <div className="grid md:grid-cols-2 gap-6">
+                <input
+                  type="date"
+                  name="date"
                   required
+                  className="w-full px-5 py-4 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-700"
+                />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number (required)"
+                  required
+                  className="w-full px-5 py-4 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-700"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <FaCalendar />
-                      Pickup Date
-                    </span>
-                  </label>
-                  <input 
-                    type="date" 
-                    name="date"
-                    value={orderData.date}
-                    onChange={handleInputChange}
-                    className="input input-bordered text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700"
-                    required
-                  />
-                </div>
-                
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <FaPhone />
-                      Phone Number
-                    </span>
-                  </label>
-                  <input 
-                    type="tel" 
-                    name="phone"
-                    value={orderData.phone}
-                    onChange={handleInputChange}
-                    className="input input-bordered text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400"
-                    placeholder="Your phone number"
-                    required
-                  />
-                </div>
-              </div>
+              <textarea
+                name="notes"
+                placeholder="Additional notes (optional)"
+                className="w-full px-5 py-4 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-700"
+                rows="4"
+              />
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold text-gray-900 dark:text-gray-100">Additional Notes</span>
-                </label>
-                <textarea 
-                  name="notes"
-                  value={orderData.notes}
-                  onChange={handleInputChange}
-                  className="textarea textarea-bordered h-20 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400"
-                  placeholder="Any special requirements or notes..."
-                />
-              </div>
-
-              <div className="modal-action flex-col sm:flex-row gap-2">
-                <button 
-                  type="button" 
-                  className="btn btn-outline w-full sm:w-auto border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+              <div className="flex gap-4 justify-end">
+                <button
+                  type="button"
                   onClick={() => setShowModal(false)}
+                  className="px-8 py-4 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-bold transition"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  className="btn btn-primary bg-gradient-to-r from-blue-500 to-purple-600 border-none text-white hover:from-blue-600 hover:to-purple-700 w-full sm:w-auto"
+                <button
+                  type="submit"
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold transition shadow-lg"
                 >
-                  {product.category === "Pets" ? "Confirm Adoption" : "Place Order"}
+                  Submit Request
                 </button>
               </div>
             </form>
