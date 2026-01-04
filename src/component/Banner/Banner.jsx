@@ -77,7 +77,7 @@ const Banner = () => {
                 </motion.p>
                 <Link to="/auth/login">
                   <motion.button
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 1.3 }}
@@ -127,7 +127,7 @@ const Banner = () => {
                 </motion.p>
                 <Link to="/auth/login">
                   <motion.button
-                    className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 1.1 }}
@@ -176,7 +176,7 @@ const Banner = () => {
                 </motion.p>
                 <Link to="/auth/login">
                   <motion.button
-                    className="bg-gradient-to-r from-orange-400 to-red-500 hover:from-orange-500 hover:to-red-600 text-white font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-10 py-5 rounded-full text-xl shadow-2xl transition-all duration-300 transform hover:scale-110"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 1.1 }}

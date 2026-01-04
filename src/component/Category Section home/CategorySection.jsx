@@ -1,9 +1,11 @@
-import React from 'react';
-import { Link } from "react-router";
+import React from "react";
+import { useNavigate } from "react-router"; 
 import { FaDog, FaBone, FaPaw } from "react-icons/fa";
-import { FaKitMedical } from 'react-icons/fa6';
+import { FaKitMedical } from "react-icons/fa6";
 
 const CategorySection = () => {
+  const navigate = useNavigate(); 
+
   const categories = [
     {
       name: "Pets",
@@ -27,6 +29,11 @@ const CategorySection = () => {
     },
   ];
 
+  const handleCategoryClick = (categoryName) => {
+    
+    navigate(`/pets-supply?category=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <div>
       <h2 className="font-bold text-center my-5 text-2xl">
@@ -35,10 +42,10 @@ const CategorySection = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-11/12 mx-auto my-10">
         {categories.map((cat) => (
-          <Link
+          <div
             key={cat.name}
-            to={`/category-filtered-product/${cat.name}`}
-            className="group h-40 w-full [perspective:1000px]"
+            onClick={() => handleCategoryClick(cat.name)}
+            className="group h-40 w-full [perspective:1000px] cursor-pointer"
           >
             <div
               className="relative h-full w-full text-center transition-transform duration-700 
@@ -68,7 +75,7 @@ const CategorySection = () => {
                 />
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

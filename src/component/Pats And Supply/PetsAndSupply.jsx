@@ -3,10 +3,14 @@ import useAxios from "../Hooks/useAxios";
 import AllPatsAndProduct from "./AllPatsAndProduct";
 import Loading from "../Loading/Loading";
 import { FaSearch, FaFilter, FaPaw } from "react-icons/fa";
+import { useSearchParams } from "react-router";
 
 const categories = ["Pets", "Pet Food", "Accessories", "Pet Care Products"];
 
 const PetsAndSupply = () => {
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -16,8 +20,33 @@ const PetsAndSupply = () => {
 
   const axiosInstance = useAxios();
 
-  // (category + pagination)
+  
   useEffect(() => {
+    const newCategory = categoryFromUrl || "";
+    setSelectedCategory(newCategory);
+    setCurrentPage(1); 
+
+    setLoading(true);
+   const url = `/product?page=1&limit=${limit}${newCategory ? `&category=${newCategory}` : ''}`;
+    axiosInstance
+      .get(url)
+      .then((res) => {
+        setProducts(res.data.products || []);
+        setTotalPages(res.data.totalPages || 1);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+        setProducts([]);
+        setTotalPages(1);
+        setLoading(false);
+      });
+  }, [categoryFromUrl, axiosInstance,selectedCategory]);
+
+  
+  useEffect(() => {
+    if (currentPage === 1) return; 
+
     setLoading(true);
     const url = `/product?page=${currentPage}&limit=${limit}${selectedCategory ? `&category=${selectedCategory}` : ''}`;
     axiosInstance
@@ -30,12 +59,10 @@ const PetsAndSupply = () => {
       .catch((err) => {
         console.error(err);
         setProducts([]);
-        setTotalPages(1);
         setLoading(false);
       });
-  }, [currentPage, selectedCategory, axiosInstance]);
+  }, [currentPage,axiosInstance,selectedCategory]);
 
-  // search
   const handleSearch = (e) => {
     e.preventDefault();
     const search_text = e.target.search.value.trim();
@@ -99,7 +126,9 @@ const PetsAndSupply = () => {
                 >
                   <option value="">All Categories</option>
                   {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>

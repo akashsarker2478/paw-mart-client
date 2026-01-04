@@ -19,7 +19,7 @@ const UserDashboardLayout = () => {
             className={({ isActive }) =>
   `flex items-center gap-3 px-6 py-4 transition-all duration-300 font-medium ${
     isActive
-      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 shadow-md border-r-4 border-blue-500"
+      ? ""
       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
   }`
 }

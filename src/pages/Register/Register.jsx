@@ -11,12 +11,13 @@ import { Link, useNavigate } from "react-router";
 import useAuth from "../../component/Hooks/useAuth";
 import useAxios from "../../component/Hooks/useAxios";
 import Swal from "sweetalert2";
+import img from "../../assets/login.jpg"; 
 
 const Register = () => {
   const [eye, setEye] = useState(false);
   const [passwordHint, setPasswordHint] = useState("");
   const { createUser, updateUser, setUser, googleSignIn } = useAuth();
-  const axiosInstance = useAxios()
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
 
   const validatePassword = (password) => {
@@ -48,7 +49,6 @@ const Register = () => {
     const hasUpperCase = /[A-Z]/;
     const hasLowerCase = /[a-z]/;
 
-    // Real-time hints
     if (!minLength.test(password)) {
       setPasswordHint("❌ Need at least 6 characters");
     } else if (!hasUpperCase.test(password)) {
@@ -89,38 +89,37 @@ const Register = () => {
               photoURL: photo,
             });
             Swal.fire({
-            icon: "success",
-            title: "Account Created!",
-            text: "Your account has been created successfully.",
-            timer: 1500,
-            showConfirmButton: false,
-            position: "top",
-          });
-            const newUser={
-          name:res.user.displayName,
-          email: res.user.email,
-          photo: res.user.photoURL,
-        };
-        axiosInstance.post('/user',newUser)
-        .then(data=>{
-          console.log(data.data)
-        })
+              icon: "success",
+              title: "Account Created!",
+              text: "Your account has been created successfully.",
+              timer: 1500,
+              showConfirmButton: false,
+              position: "top",
+            });
+            const newUser = {
+              name: res.user.displayName,
+              email: res.user.email,
+              photo: res.user.photoURL,
+            };
+            axiosInstance.post('/user', newUser).then((data) => {
+              console.log(data.data);
+            });
             navigate("/");
           })
           .catch((err) => {
             Swal.fire({
-            icon: "error",
-            title: "Update Failed!",
-            text: err.message,
-          });
+              icon: "error",
+              title: "Update Failed!",
+              text: err.message,
+            });
           });
       })
       .catch((err) => {
         Swal.fire({
-        icon: "error",
-        title: "Registration Failed!",
-        text: err.message,
-      });
+          icon: "error",
+          title: "Registration Failed!",
+          text: err.message,
+        });
       });
   };
 
@@ -129,42 +128,50 @@ const Register = () => {
       .then(res => {
         console.log(res.user);
         const user = res.user;
-          Swal.fire({
-        icon: "success",
-        title: "Google Login Successful!",
-        text: `Welcome, ${user.displayName}!`,
-        timer: 1500,
-        showConfirmButton: false,
-        position: "top",
-      });
-        const newUser={
-          name:res.user.displayName,
+        Swal.fire({
+          icon: "success",
+          title: "Google Login Successful!",
+          text: `Welcome, ${user.displayName}!`,
+          timer: 1500,
+          showConfirmButton: false,
+          position: "top",
+        });
+        const newUser = {
+          name: res.user.displayName,
           email: res.user.email,
           photo: res.user.photoURL,
         };
-        axiosInstance.post('/user',newUser)
-        .then(data=>{
-          console.log(data.data)
-        })
+        axiosInstance.post('/user', newUser).then(data => {
+          console.log(data.data);
+        });
         navigate('/');
       })
       .catch(error => {
         console.log(error.message);
-         Swal.fire({
-        icon: "error",
-        title: "Google Login Failed!",
-        text: error.message,
-      });
+        Swal.fire({
+          icon: "error",
+          title: "Google Login Failed!",
+          text: error.message,
+        });
       });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <title>register</title>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 -z-10">
+        <img
+          src={img}
+          alt="Pet background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/70 to-purple-600/70"></div>
+      </div>
+
+      <title>Register</title>
+
       <div className="w-full max-w-md">
-        
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
-         
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-center">
             <h2 className="text-3xl font-bold text-white mb-2">
               Create Account
@@ -172,7 +179,6 @@ const Register = () => {
             <p className="text-blue-100">Join Paw Mart today!</p>
           </div>
 
-         
           <form onSubmit={handleRegister} className="p-6 space-y-4">
             {/* Name Field */}
             <div className="space-y-2">
@@ -183,7 +189,7 @@ const Register = () => {
               <input
                 type="text"
                 name="name"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 placeholder="Enter your full name"
                 required
               />
@@ -198,7 +204,7 @@ const Register = () => {
               <input
                 type="email"
                 name="email"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 placeholder="Enter your email"
                 required
               />
@@ -213,7 +219,7 @@ const Register = () => {
               <input
                 type="text"
                 name="photo"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 placeholder="Paste your photo URL"
               />
             </div>
@@ -221,26 +227,13 @@ const Register = () => {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                <svg
-                  className="w-4 h-4 text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
                 Password
               </label>
               <div className="relative">
                 <input
                   type={eye ? "text" : "password"}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white pr-12 transition-all duration-300"
                   name="password"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white pr-12"
                   placeholder="Create a strong password"
                   onChange={handlePasswordChange}
                   required
@@ -248,28 +241,20 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setEye(!eye)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-500 transition-colors duration-300 p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500"
                 >
-                  {eye ? (
-                    <FaEye className="text-blue-500 text-lg" />
-                  ) : (
-                    <FaRegEyeSlash className="text-lg" />
-                  )}
+                  {eye ? <FaEye /> : <FaRegEyeSlash />}
                 </button>
               </div>
-              
+
               {/* Real-time Password Hint */}
               {passwordHint && (
-                <p className={`text-sm font-medium mt-1 ${
-                  passwordHint.includes("✅") 
-                    ? "text-green-600 dark:text-green-400" 
-                    : "text-red-600 dark:text-red-400"
-                }`}>
+                <p className={`text-sm font-medium mt-1 ${passwordHint.includes("✅") ? "text-green-600" : "text-red-600"}`}>
                   {passwordHint}
                 </p>
               )}
 
-              {/* Password Requirements Info */}
+              {/* Password Requirements */}
               <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-2">
                   Password Requirements:
@@ -282,15 +267,13 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Register Button - Always Enabled */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mt-2"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Create Account
             </button>
 
-            {/* Divider */}
             <div className="relative flex items-center py-4">
               <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
               <span className="flex-shrink mx-4 text-gray-500 dark:text-gray-400 text-sm">
@@ -299,24 +282,22 @@ const Register = () => {
               <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
             </div>
 
-            {/* Google Sign In */}
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500"
+              className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3.5 rounded-xl hover:shadow-lg group"
             >
-              <FaGoogle className="text-red-500 text-lg" />
+              <FaGoogle className="text-red-500 text-lg group-hover:scale-110 transition-transform" />
               Sign up with Google
             </button>
           </form>
 
-          {/* Footer */}
           <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-t border-gray-200 dark:border-gray-600">
             <p className="text-center text-gray-600 dark:text-gray-400">
               Already have an account?{" "}
               <Link
                 to={"/auth/login"}
-                className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors duration-300"
+                className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-semibold"
               >
                 Sign in here
               </Link>
@@ -324,7 +305,6 @@ const Register = () => {
           </div>
         </div>
 
-        {/* Additional Info */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             By creating an account, you agree to our{" "}

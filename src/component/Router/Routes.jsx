@@ -7,7 +7,7 @@ import MyListing from "../../pages/My-Listing/MyListing";
 import MyOrders from "../../pages/My-orders/MyOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../../pages/Login/Login"
-import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilteredProduct";
+// import CategoryFilteredProduct from "../Category-Filtered-Product/CategoryFilteredProduct";
 import Register from "../../pages/Register/Register";
 import Error from "../../pages/ErrorPage/Error";
 import Loading from "../Loading/Loading";
@@ -53,10 +53,10 @@ const router = createBrowserRouter([
             element:<BlogsAndTips></BlogsAndTips>
         },
 
-        {
-            path:'/category-filtered-product/:categoryName',
-            element:<CategoryFilteredProduct></CategoryFilteredProduct>
-        },
+        // {
+        //     path:'/category-filtered-product/:categoryName',
+        //     element:<CategoryFilteredProduct></CategoryFilteredProduct>
+        // },
         {
             path:"/productDetails/:id",
             element:

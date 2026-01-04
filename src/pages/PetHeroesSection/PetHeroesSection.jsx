@@ -40,7 +40,7 @@ const PetHeroesSection = () => {
   return (
     <div className="w-11/12 mx-auto my-16">
       <h2 className="text-3xl font-bold text-center mb-10">
-        Meet Our <span className="text-purple-600">Pet Heroes</span>
+        Meet Our <span className="text-blue-500">Pet Heroes</span>
       </h2>
 
       <Marquee pauseOnHover={true} speed={40}>

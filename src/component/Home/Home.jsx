@@ -4,6 +4,7 @@ import Banner from "../Banner/Banner"
 import CategorySection from '../Category Section home/CategorySection';
 import WhyAdoptSection from "../../pages/Why AdoptSection/WhyAdoptSection"
 import PetHeroesSection from "../../pages/PetHeroesSection/PetHeroesSection"
+import JoinPawMartCTA from '../../pages/PetHeroesSection/JoinPaw Mart CTA/JoinPawMartCTA';
 const Home = () => {
     return (
         <div>
@@ -20,6 +21,9 @@ const Home = () => {
             </section>
             <section>
                 <PetHeroesSection></PetHeroesSection>
+            </section>
+            <section>
+                <JoinPawMartCTA></JoinPawMartCTA>
             </section>
         </div>
     );
