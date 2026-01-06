@@ -32,7 +32,7 @@ This project is built with the **MERN Stack** (MongoDB, Express, React, Node.js)
 
 ### ☁️ Deployment
 - netlify (for Client)
-- MongoDB Atlas (Database)
+- Backend: Vercel
 
 
 
@@ -42,16 +42,24 @@ This project is built with the **MERN Stack** (MongoDB, Express, React, Node.js)
 
 Paw Mart is built for real users — pet owners, adopters and shop owners — and includes the full set of features you expect from a modern marketplace:
 
-- ✅ **User accounts & authentication** — Users can create an account or sign in with Google to manage listings and orders.  
-- ✅ **Add / Sell / Buy products** — Registered users can list new products or pets for adoption, and buyers can place orders directly from product pages.  
-- ✅ **Product details page** — Each listing has a full details view (images, description, price, location, owner contact).  
-- ✅ **Order management & history** — Buyers can view their order history; sellers can see orders for their listings.  
-- ✅ **Downloadable order report** — Users can export their orders as a PDF (downloadable report) for record-keeping.  
-- ✅ **Search & filter** — Quickly find listings by name or category using the search and filter controls.  
-- ✅ **Dark / Light mode** — Built-in theme toggle for a comfortable reading experience day or night.  
-- ✅ **Responsive & accessible UI** — Works smoothly across phones, tablets and desktops.  
-- ✅ **Secure by design** — All sensitive data stored in MongoDB Atlas and server APIs protected with environment variables.  
-- ✅ **Nice UX touches** — SweetAlert2 notifications, animated banner (Swiper + Framer Motion), and helpful tooltips improve the user experience.
+✅Authentication — Email/Password + Google Sign-In (Firebase Auth)
+
+✅Browse & Explore — All products with search, category filter & pagination
+
+✅Add Listing — Users can add pets (free adoption) or products with category-based pricing
+
+✅My Listings — View, update & delete own listings
+
+✅My Orders — Track order/adoption history with PDF report download
+
+✅User Dashboard — Personalized stats (total listings, orders, pending 
+requests, adopted pets), category breakdown pie chart & recent activity
+
+✅Additional Pages — About, Contact, Blog/Tips, Adoption Guide
+
+✅Responsive Design — Mobile-friendly with dark mode support
+
+✅Modern UI — Smooth animations, tooltips, loading states & user-friendly messages
 
 ---
 
